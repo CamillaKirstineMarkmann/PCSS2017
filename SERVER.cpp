@@ -125,6 +125,8 @@ void main()
 	ADDRESS.sin_addr.s_addr = INADDR_ANY; //INADDR_ANY, means use the IP of the machine you are on, you can also specify it to Local //inet_addr("127.0.0.1"); //Set IP, this number must be converted
 
 
+
+
 	if (sock_LISTEN == INVALID_SOCKET)
 	{
 		cerr << "Can't Create a socket ! Quitting" << endl;
@@ -183,7 +185,7 @@ void main()
 					closesocket(sock);
 					FD_CLR(sock, &master);
 
-				} */
+				}  */
 				else
 				{
 					// Send message to other clients and definitely not the listening socket
@@ -216,23 +218,32 @@ void main()
 							string strOut02 = ss02.str();
 							send(Client02, strOut02.c_str(), strOut02.size() + 1, 0);
 
-							
+
 							//Here we receive from Client 01!
-							
+
 							SUCCESSFUL = recv(Client01, MESSAGE01, sizeof(MESSAGE01), NULL);
 
 							assignTaskClient01 = MESSAGE01;
 
 							if (assignTaskClient01.compare(createGame) == 0) {
-								if (hasGameBeenCreate = false) {
+								if (hasGameBeenCreate == false) {
 									createGameonServer();
 									cout << "Correct input for CreateGame\n" << endl;
 									std::string assignTaskClient01 = "";
 									cout << Game01.title << " has been created!\n\n" << "Player 01 Score: " << Game01.score_Player01 << '\t' << "Player 02 Score: " << Game01.score_Player02 << endl;
+									hasGameBeenCreate = true;
+									
 								}
-								else
+								/* else
 									cout << "Game has already been created..." << endl;
-									SUCCESSFUL = send(Client01, "The game has already been created", 46, NULL);
+								SUCCESSFUL = send(Client01, "The game has already been created", 46, NULL);
+								 */
+							}
+							else if (assignTaskClient02.compare(createGame) == 0) {
+
+								ss02 << "You cannot create game you are player 2 NOOB" << "\n";
+								string strOut02 = ss02.str();
+								send(Client02, strOut02.c_str(), strOut02.size() + 1, 0);
 
 							}
 							else if (assignTaskClient01.compare(joinGame) == 0) {
@@ -251,31 +262,33 @@ void main()
 								Game01.weapon_Player02 = 2;
 								CompareWeapons();
 								SUCCESSFUL = send(Client01, "Player 1 wins!", 46, NULL);
-							std::string assignTaskClient01 = "";
+								std::string assignTaskClient01 = "";
 							}
 							else if (assignTaskClient01.compare(scissorChosen) == 0) {
 								cout << "Correct input for scissor chosen" << endl;
 								Game01.weapon_Player02 = 3;
 								CompareWeapons();
 								SUCCESSFUL = send(Client01, "Player 2 wins!", 46, NULL);
-							std::string assignTaskClient01 = "";
-							
+								std::string assignTaskClient01 = "";
+
 
 							}
 
 							//Here we receive from Client 01!
 
 
-							SUCCESSFUL = recv(Client02, MESSAGE01, sizeof(MESSAGE02), NULL);
+							SUCCESSFUL = recv(Client02, MESSAGE02, sizeof(MESSAGE02), NULL);
 
 							assignTaskClient02 = MESSAGE02;
 
 							if (assignTaskClient02.compare(createGame) == 0) {
-								createGameonServer();
-								cout << "Correct input for CreateGame\n" << endl;
-								std::string assignTaskClient02 = "";
-								cout << Game01.title << " has been created!\n\n" << "Player 01 Score: " << Game01.score_Player01 << '\t' << "Player 02 Score: " << Game01.score_Player02 << endl;
+
+									ss02 << "You cannot create game you are player 2 NOOB" << "\n";
+									string strOut02 = ss02.str();
+									send(Client02, strOut02.c_str(), strOut02.size() + 1, 0);
+
 							}
+
 							else if (assignTaskClient02.compare(joinGame) == 0) {
 								cout << "Correct input for Joingame" << endl;
 								std::string assignTaskClient02 = "";
